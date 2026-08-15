@@ -11,6 +11,36 @@
 const CONFIG = {
 
   /* --------------------------------------------------------
+     0. APPARENCE — couleurs, formes, polices
+     --------------------------------------------------------
+     Modifie ces valeurs pour changer complètement le look de
+     l'app, sans toucher à style.css. Couleurs en hexadécimal.
+  -------------------------------------------------------- */
+  apparence: {
+    couleurs: {
+      fond: "#EEEEE6",           // arrière-plan général
+      panneau: "#FFFFFF",        // fond des zones (en-tête, saisie...)
+      texte: "#1E2622",          // couleur du texte principal
+      texteAtténué: "#5B6660",   // couleur des textes secondaires (statut, indices)
+      bordure: "#DBDBCF",        // lignes de séparation
+      accentPrincipal: "#35594C",   // boutons, icônes, avatar
+      accentPrincipalFonce: "#223D33", // bouton d'envoi, bulles utilisateur
+      accentSecondaire: "#6E5A96",  // focus du champ de texte
+      bulleBot: "#FFFFFF",
+      bulleUtilisateur: "#223D33",
+      texteBulleUtilisateur: "#F3F1E7"
+    },
+    formes: {
+      rayonCoins: "14px"   // arrondi des bulles, boutons, panneaux (ex: "4px" = carré, "24px" = très arrondi)
+    },
+    polices: {
+      titres: "'Fraunces', serif",
+      texte: "'Inter', system-ui, sans-serif",
+      statutEtCode: "'JetBrains Mono', monospace"
+    }
+  },
+
+  /* --------------------------------------------------------
      1. IDENTITÉ DE TON ASSISTANT
      -------------------------------------------------------- */
   assistant: {
@@ -40,11 +70,11 @@ Ajoute autant de lignes que nécessaire — remplace tout ce texte par tes propr
      mode:
        "demo"      -> réponses simulées, fonctionne sans rien configurer,
                       utile pour tester l'interface tout de suite.
-       "api"       -> appelle une vraie API compatible (OpenAI, Anthropic,
+       "api"       -> appelle une vraie API compatible (OpenAI,GroqCloud Anthropic,
                       Mistral, un modèle open source auto-hébergé type
                       Ollama/LM Studio, etc.)
 
-     ⚠️ Pour le mode "api" : la plupart des API (OpenAI, Anthropic...)
+     ⚠️ Pour le mode "api" : la plupart des API (OpenAI,GroqCloud Anthropic...)
      bloquent les appels directs depuis un navigateur (CORS) et
      exigent que la clé secrète ne soit jamais exposée côté client.
      La bonne pratique : héberger un petit serveur relais (proxy)
@@ -53,62 +83,3 @@ Ajoute autant de lignes que nécessaire — remplace tout ce texte par tes propr
      directement vers OpenAI/Anthropic.
   -------------------------------------------------------- */
   chat: {
-    mode: "api", // ✅ actif — nécessite que ton relais (voir dossier relais-serveur/) soit déployé
-
-    api: {
-      // ⚠️ REMPLACE cette ligne par l'URL Render que tu obtiendras après déploiement,
-      // ex : "https://mon-assistant-relais.onrender.com/api/chat"
-      endpoint: "https://assistant-30ki.onrender.com/api/chat",
-      modele: "gpt-4o-mini", // modèle OpenAI utilisé par le relais
-      // Aucune clé API ici ! Elle vit uniquement sur le serveur relais (variable d'environnement).
-    }
-  },
-
-  /* --------------------------------------------------------
-     3. GÉNÉRATION D'IMAGES
-     --------------------------------------------------------
-     Branché par défaut sur Pollinations.ai : un service gratuit,
-     open source, et SANS clé API. Il suffit de construire une URL
-     et de l'utiliser comme source d'image — donc ça marche
-     immédiatement, sans backend, sans coût.
-     Doc : https://pollinations.ai
-  -------------------------------------------------------- */
-  image: {
-    mode: "pollinations", // "pollinations" (gratuit, prêt à l'emploi) ou "api" (ton propre service)
-
-    pollinations: {
-      construireUrl: (prompt) =>
-        `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=768&height=768&nologo=true`
-    },
-
-    api: {
-      // Si un jour tu préfères Stable Diffusion, DALL·E, etc. via ton relais
-      endpoint: "http://localhost:3000/api/image"
-    }
-  },
-
-  /* --------------------------------------------------------
-     4. EMOJIS
-     --------------------------------------------------------
-     Liste affichée dans le sélecteur rapide. Ajoute/retire ce
-     que tu veux — aucune API requise, ce sont des emojis natifs.
-  -------------------------------------------------------- */
-  emojis: [
-    "😀","😂","😍","🤔","😎","😢","😡","👍","👎","🙏",
-    "🎉","🔥","💡","✅","❌","❤️","🚀","🎨","🖼️","🤖",
-    "📌","⭐","👀","💬","🕒","📎","🧠","🛠️","📷","🎵"
-  ],
-
-  /* --------------------------------------------------------
-     5. STOCKAGE
-     --------------------------------------------------------
-     "memoire"   -> les messages disparaissent si on ferme la page
-                    (par défaut, aucune config requise)
-     "storage"   -> persistant via window.storage (si tu déploies
-                    dans un environnement qui le supporte)
-  -------------------------------------------------------- */
-  stockage: {
-    mode: "memoire"
-  }
-
-};
