@@ -88,7 +88,7 @@ Ajoute autant de lignes que nécessaire — remplace tout ce texte par tes propr
     api: {
       // ⚠️ REMPLACE cette ligne par l'URL Render que tu obtiendras après déploiement,
       // ex : "https://mon-assistant-relais.onrender.com/api/chat"
-      endpoint: "https://assistant-30ki.onrender.com/api/chat",
+      endpoint: https://assistant-30ki.onrender.com/api/chat",
       modele: "llama-3.3-70b-versatile", // modèle Groq utilisé par le relais
       // Aucune clé API ici ! Elle vit uniquement sur le serveur relais (variable d'environnement).
     }
