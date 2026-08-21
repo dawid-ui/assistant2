@@ -8,7 +8,7 @@
    Tu peux relancer ce fichier à volonté, autant de fois que tu veux.
    ============================================================ */
 
-const CONFIG = {
+window.CONFIG = {
 
   /* --------------------------------------------------------
      0. APPARENCE — couleurs, formes, polices
