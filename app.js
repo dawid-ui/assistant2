@@ -82,10 +82,18 @@ function appliquerApparence() {
 /* ============================================================
 AFFICHAGE DES MESSAGES
 function majStatut() {
-  document.getElementById("statutMode").textContent =
-    `chat: ${CONFIG.chat.mode} · image: ${CONFIG.image.mode}`;
-}
+  const statut = document.getElementById("statutMode");
 
+  const modeChat = CONFIG.chat.mode === "api"
+    ? "API"
+    : "DÉMO";
+
+  const modeImage = CONFIG.image.mode === "pollinations"
+    ? "POLLINATIONS"
+    : "API";
+
+  statut.textContent = CHAT : ${modeChat} · IMAGE : ${modeImage};
+}
 /* ============================================================
    AFFICHAGE DES MESSAGES
    ============================================================ */
