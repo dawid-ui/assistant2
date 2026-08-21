@@ -9,7 +9,13 @@
    nouveaux outils, etc.), les points d'extension marqués
    "🔧 EXTENSION" ci-dessous sont faits pour ça.
    ============================================================ */
+if (!window.CONFIG) {
+  throw new Error(
+    "CONFIG n'a pas été chargé. Vérifie que config.js est bien présent."
+  );
+}
 
+const CONFIG = window.CONFIG;
 const etat = {
   messages: [] // { role: "user" | "bot", type: "texte" | "image", contenu: string }
 };
