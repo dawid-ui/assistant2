@@ -1,38 +1,32 @@
 /* ============================================================
-   CONFIG.JS — LA ZONE QUE TU PERSONNALISES
-   ============================================================
-   Tout ce dont tu as besoin pour brancher TON assistant IA est ici.
-   Le reste du code (app.js, index.html, style.css) n'a normalement
-   pas besoin d'être touché — il lit simplement cet objet CONFIG.
-
-   Tu peux relancer ce fichier à volonté, autant de fois que tu veux.
+   CONFIG.JS — CONFIGURATION DE L'ASSISTANT
    ============================================================ */
 
 window.CONFIG = {
 
-  /* --------------------------------------------------------
-     0. APPARENCE — couleurs, formes, polices
-     --------------------------------------------------------
-     Modifie ces valeurs pour changer complètement le look de
-     l'app, sans toucher à style.css. Couleurs en hexadécimal.
-  -------------------------------------------------------- */
+  /* ==========================================================
+     1. APPARENCE
+     ========================================================== */
+
   apparence: {
     couleurs: {
-      fond: "#EEEEE6",           // arrière-plan général
-      panneau: "#FFFFFF",        // fond des zones (en-tête, saisie...)
-      texte: "#1E2622",          // couleur du texte principal
-      texteAtténué: "#5B6660",   // couleur des textes secondaires (statut, indices)
-      bordure: "#DBDBCF",        // lignes de séparation
-      accentPrincipal: "#35594C",   // boutons, icônes, avatar
-      accentPrincipalFonce: "#223D33", // bouton d'envoi, bulles utilisateur
-      accentSecondaire: "#6E5A96",  // focus du champ de texte
+      fond: "#EEEEE6",
+      panneau: "#FFFFFF",
+      texte: "#1E2622",
+      texteAtténué: "#5B6660",
+      bordure: "#DBDBCF",
+      accentPrincipal: "#35594C",
+      accentPrincipalFonce: "#223D33",
+      accentSecondaire: "#6E5A96",
       bulleBot: "#FFFFFF",
       bulleUtilisateur: "#223D33",
       texteBulleUtilisateur: "#F3F1E7"
     },
+
     formes: {
-      rayonCoins: "14px"   // arrondi des bulles, boutons, panneaux (ex: "4px" = carré, "24px" = très arrondi)
+      rayonCoins: "14px"
     },
+
     polices: {
       titres: "'Fraunces', serif",
       texte: "'Inter', system-ui, sans-serif",
@@ -40,119 +34,104 @@ window.CONFIG = {
     }
   },
 
-  /* --------------------------------------------------------
-     1. IDENTITÉ DE TON ASSISTANT
-     -------------------------------------------------------- */
+
+  /* ==========================================================
+     2. IDENTITÉ DE L'ASSISTANT
+     ========================================================== */
+
   assistant: {
     nom: "Mon Assistant",
     avatarEmoji: "🤖",
-    messageAccueil: "Salut ! Je suis ton assistant. Pose-moi une question, ou demande-moi une image 🎨",
-    // Personnalité / instructions système envoyées au modèle à CHAQUE conversation.
-    // Utilise des backticks (`) au lieu de guillemets pour écrire sur plusieurs lignes
-    // sans limite pratique — écris ici tout ce que tu veux : ton, règles, connaissances,
-    // ce qu'il doit faire ou éviter, exemples, etc.
+
+    messageAccueil:
+      "Salut ! Je suis ton assistant. Pose-moi une question, ou demande-moi une image 🎨",
+
     promptSysteme: `
-Tu es un assistant d’observation des marchés financiers.
-Tu réponds en français, avec un ton neutre, précis et prudent.
-
-RÈGLE ABSOLUE :
-Tu ne dois jamais inventer un prix, une variation, une actualité, une annonce,
-un volume, un indicateur, une source, une date ou une raison expliquant le marché.
-
-Tu utilises uniquement les données explicitement fournies dans le message.
-Si les données de prix ou les sources d’actualité vérifiées ne sont pas fournies,
-réponds exactement :
-
-DONNÉES INSUFFISANTES — aucune analyse de marché fiable ne peut être fournie.
-
-Tu n’exécutes aucun ordre et tu ne présentes jamais une position comme certaine.
-Tu peux analyser des scénarios, mais tu dois toujours préciser :
-- Données utilisées
-- Horodatage des données
-- Sources fournies
-- Éléments incertains
-- Conditions qui invalident le scénario
-- Conclusion : OBSERVER ou NO_TRADE
-
-Toute affirmation factuelle doit citer les données ou sources contenues dans le message.
-En cas de doute, contradiction, donnée ancienne ou source absente : NO_TRADE.
-`.trim().
-    `.trim()
+Tu es un assistant utile, clair et amical.
+Réponds en français par défaut.
+`.trim()
   },
 
-  /* --------------------------------------------------------
-     2. MOTEUR DE CHAT (texte)
-     --------------------------------------------------------
-     mode:
-       "demo"      -> réponses simulées, fonctionne sans rien configurer,
-                      utile pour tester l'interface tout de suite.
-       "api"       -> appelle une vraie API compatible (OpenAI, Anthropic,
-                      Mistral, un modèle open source auto-hébergé type
-                      Ollama/LM Studio, etc.)
 
-     ⚠️ Pour le mode "api" : la plupart des API (OpenAI, Anthropic...)
-     bloquent les appels directs depuis un navigateur (CORS) et
-     exigent que la clé secrète ne soit jamais exposée côté client.
-     La bonne pratique : héberger un petit serveur relais (proxy)
-     qui garde ta clé secrète et que ton app appelle à sa place.
-     Le endpoint ci-dessous doit pointer vers CE relais, pas
-     directement vers OpenAI/Anthropic.
-  -------------------------------------------------------- */
+  /* ==========================================================
+     3. MOTEUR DE CHAT
+     ========================================================== */
+
   chat: {
-    mode: "api", // ✅ actif — nécessite que ton relais (voir dossier relais-serveur/) soit déployé
+    mode: "api",
 
     api: {
-      // ⚠️ REMPLACE cette ligne par l'URL Render que tu obtiendras après déploiement,
-      // ex : "https://mon-assistant-relais.onrender.com/api/chat"
       endpoint: "https://assistant-30ki.onrender.com/api/chat",
-      modele: "openai/gpt-oss-120b", // modèle Groq utilisé par le relais (llama-3.3-70b-versatile a été retiré par Groq le 16/08/2026)
-      // Aucune clé API ici ! Elle vit uniquement sur le serveur relais (variable d'environnement).
+      modele: "openai/gpt-oss-120b"
     }
   },
 
-  /* --------------------------------------------------------
-     3. GÉNÉRATION D'IMAGES
-     --------------------------------------------------------
-     Branché par défaut sur Pollinations.ai : un service gratuit,
-     open source, et SANS clé API. Il suffit de construire une URL
-     et de l'utiliser comme source d'image — donc ça marche
-     immédiatement, sans backend, sans coût.
-     Doc : https://pollinations.ai
-  -------------------------------------------------------- */
+
+  /* ==========================================================
+     4. GÉNÉRATION D'IMAGES
+     ========================================================== */
+
   image: {
-    mode: "pollinations", // "pollinations" (gratuit, prêt à l'emploi) ou "api" (ton propre service)
+    mode: "pollinations",
 
     pollinations: {
-      construireUrl: (prompt) =>
-        `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=768&height=768&nologo=true`
+      construireUrl: function (prompt) {
+        return (
+          "https://image.pollinations.ai/prompt/" +
+          encodeURIComponent(prompt) +
+          "?width=768&height=768&nologo=true"
+        );
+      }
     },
 
     api: {
-      // Si un jour tu préfères Stable Diffusion, DALL·E, etc. via ton relais
       endpoint: "http://localhost:3000/api/image"
     }
   },
 
-  /* --------------------------------------------------------
-     4. EMOJIS
-     --------------------------------------------------------
-     Liste affichée dans le sélecteur rapide. Ajoute/retire ce
-     que tu veux — aucune API requise, ce sont des emojis natifs.
-  -------------------------------------------------------- */
+
+  /* ==========================================================
+     5. EMOJIS
+     ========================================================== */
+
   emojis: [
-    "😀","😂","😍","🤔","😎","😢","😡","👍","👎","🙏",
-    "🎉","🔥","💡","✅","❌","❤️","🚀","🎨","🖼️","🤖",
-    "📌","⭐","👀","💬","🕒","📎","🧠","🛠️","📷","🎵"
+    "😀",
+    "😂",
+    "😍",
+    "🤔",
+    "😎",
+    "😢",
+    "😡",
+    "👍",
+    "👎",
+    "🙏",
+    "🎉",
+    "🔥",
+    "💡",
+    "✅",
+    "❌",
+    "❤️",
+    "🚀",
+    "🎨",
+    "🖼️",
+    "🤖",
+    "📌",
+    "⭐",
+    "👀",
+    "💬",
+    "🕒",
+    "📎",
+    "🧠",
+    "🛠️",
+    "📷",
+    "🎵"
   ],
 
-  /* --------------------------------------------------------
-     5. STOCKAGE
-     --------------------------------------------------------
-     "memoire"   -> les messages disparaissent si on ferme la page
-                    (par défaut, aucune config requise)
-     "storage"   -> persistant via window.storage (si tu déploies
-                    dans un environnement qui le supporte)
-  -------------------------------------------------------- */
+
+  /* ==========================================================
+     6. STOCKAGE
+     ========================================================== */
+
   stockage: {
     mode: "memoire"
   }
