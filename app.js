@@ -73,6 +73,8 @@ function appliquerApparence() {
   if (p.statutEtCode) racine.setProperty("--police-code", p.statutEtCode);
 }
 
+/* ============================================================
+AFFICHAGE DES MESSAGES
 function majStatut() {
   document.getElementById("statutMode").textContent =
     `chat: ${CONFIG.chat.mode} · image: ${CONFIG.image.mode}`;
