@@ -185,6 +185,76 @@ async function obtenirReponseChat(texte) {
 
   throw new Error(`Mode de chat inconnu : ${CONFIG.chat.mode}`);
 }
+/* ============================================================
+   DÉCISION TRADINGVIEW — AFFICHAGE AUTOMATIQUE
+   ============================================================ */
+
+let derniereDecisionAffichee = null;
+
+async function verifierDecisionRender() {
+  try {
+    const res = await fetch(
+      "https://assistant-30ki.onrender.com/api/latest-decision"
+    );
+
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const decision = data.decision;
+
+    if (!decision) return;
+
+    if (decision.id === derniereDecisionAffichee) {
+      return;
+    }
+
+    derniereDecisionAffichee = decision.id;
+
+    const prefixe = decision.alerteTest
+      ? "🧪 TEST TradingView"
+      : "📊 NOUVELLE DÉCISION";
+
+    const message = [
+      `${prefixe} — ${decision.symbol}`,
+      `Timeframe : ${decision.timeframe}`,
+      `Signal : ${decision.signal}`,
+      `Verdict : ${decision.verdict}`,
+      decision.entree !== null
+        ? `Entrée : ${decision.entree}`
+        : null,
+      decision.stop !== null
+        ? `Stop-loss : ${decision.stop}`
+        : null,
+      decision.objectif !== null
+        ? `Objectif : ${decision.objectif}`
+        : null,
+      decision.rr !== null
+        ? `RR : ${decision.rr}`
+        : null,
+      "",
+      decision.alerteTest
+        ? "⚠️ Alerte de TEST — aucune exécution."
+        : "Analyse uniquement — aucun ordre envoyé.",
+      "",
+      decision.motif || ""
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    ajouterMessage("bot", "texte", message);
+
+  } catch (error) {
+    console.error(
+      "Erreur récupération décision Render :",
+      error
+    );
+  }
+}
+
+setInterval(
+  verifierDecisionRender,
+  2000
+);
 
 /* Réponses simulées, juste pour tester l'interface sans rien brancher */
 function reponseDemo(texte) {
