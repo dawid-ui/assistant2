@@ -50,6 +50,7 @@ function initialiser() {
 
   ajouterMessage("bot", "texte", CONFIG.assistant.messageAccueil);
 }
+ajouterNotification(decision);
 
 /* Applique les couleurs/formes/polices de CONFIG.apparence aux variables CSS */
 function appliquerApparence() {
@@ -339,7 +340,7 @@ btnEmoji.addEventListener("click", basculerEmojiPicker);
 btnImage.addEventListener("click", genererImage);
 
 btnParametres.addEventListener("click", () => {
-  panneauParametres.hidden = !panneauParametres.hidden;
+  afficherNotifications();
 });
 
 selectModeChat.addEventListener("change", (e) => {
