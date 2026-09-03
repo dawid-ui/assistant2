@@ -79,23 +79,11 @@ function appliquerApparence() {
   if (p.statutEtCode) racine.setProperty("--police-code", p.statutEtCode);
 }
 
-/* ============================================================
-AFFICHAGE DES MESSAGES
-function majStatut() {
-  const statut = document.getElementById("statutMode");
-
-  const modeChat = CONFIG.chat.mode === "api"
-    ? "API"
-    : "DÉMO";
-
-  const modeImage = CONFIG.image.mode === "pollinations"
-    ? "POLLINATIONS"
-    : "API";
-
-  statut.textContent = CHAT : ${modeChat} · IMAGE : ${modeImage};
-/* ============================================================
-   AFFICHAGE DES MESSAGES
-   ============================================================ */
+/* ============================================================ AFFICHAGE DU STATUT ============================================================ */ function majStatut() { const statut = document.getElementById("statutMode");
+const modeChat = CONFIG.chat.mode === "api" ? "API" : "DÉMO";
+const modeImage = CONFIG.image.mode === "pollinations" ? "POLLINATIONS" : "API";
+statut.textContent = CHAT : ${modeChat} · IMAGE : ${modeImage}; }
+/* ============================================================ AFFICHAGE DES MESSAGES ============================================================ */
 function ajouterMessage(role, type, contenu) {
   etat.messages.push({ role, type, contenu });
 
