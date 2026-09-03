@@ -189,6 +189,11 @@ async function verifierDecisionRender() {
 
     const data = await res.json();
     const decision = data.decision;
+     let notifications = [];
+function ajouterNotification(decision) { notifications.unshift({ id: decision.id, heure: decision.heure, symbol: decision.symbol, signal: decision.signal, verdict: decision.verdict }); }
+function afficherNotifications() { if (!notifications.length) { alert("✉️ Aucune notification."); return; }
+const texte = notifications.map((n) => 🕐 ${new Date(n.heure).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}\n + 📊 ${n.symbol} — ${n.signal}\n + Verdict : ${n.verdict} ).join("\n\n");
+alert(✉️ NOTIFICATIONS\n\n${texte}); }
 
     if (!decision) return;
 
