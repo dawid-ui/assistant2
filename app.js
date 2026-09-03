@@ -93,7 +93,6 @@ function majStatut() {
     : "API";
 
   statut.textContent = CHAT : ${modeChat} · IMAGE : ${modeImage};
-}
 /* ============================================================
    AFFICHAGE DES MESSAGES
    ============================================================ */
