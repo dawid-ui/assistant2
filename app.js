@@ -36,6 +36,42 @@ const listeNotifications = document.getElementById("listeNotifications");
 const btnFermerNotifications = document.getElementById("btnFermerNotifications");
 
 /* ============================================================
+   NOTIFICATIONS — un seul état, une seule paire de fonctions
+   ============================================================ */
+let notifications = [];
+
+function ajouterNotification(decision) {
+  notifications.unshift({
+    id: decision.id,
+    heure: decision.heure,
+    symbol: decision.symbol,
+    signal: decision.signal,
+    verdict: decision.verdict
+  });
+}
+
+function afficherNotifications() {
+  listeNotifications.innerHTML = "";
+
+  if (!notifications.length) {
+    listeNotifications.innerHTML = `<div class="notification">Aucune notification.</div>`;
+  } else {
+    notifications.forEach((n) => {
+      const item = document.createElement("div");
+      item.className = "notification";
+      item.textContent =
+        `🕐 ${new Date(n.heure).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit"
+        })} — ${n.symbol} — ${n.signal} — ${n.verdict}`;
+      listeNotifications.appendChild(item);
+    });
+  }
+
+  panneauNotifications.hidden = false;
+}
+
+/* ============================================================
    INITIALISATION — applique CONFIG à l'interface
    ============================================================ */
 function initialiser() {
@@ -53,7 +89,6 @@ function initialiser() {
 
   ajouterMessage("bot", "texte", CONFIG.assistant.messageAccueil);
 }
-ajouterNotification(decision);
 
 /* Applique les couleurs/formes/polices de CONFIG.apparence aux variables CSS */
 function appliquerApparence() {
@@ -83,11 +118,19 @@ function appliquerApparence() {
   if (p.statutEtCode) racine.setProperty("--police-code", p.statutEtCode);
 }
 
-/* ============================================================ AFFICHAGE DU STATUT ============================================================ */ function majStatut() { const statut = document.getElementById("statutMode");
-const modeChat = CONFIG.chat.mode === "api" ? "API" : "DÉMO";
-const modeImage = CONFIG.image.mode === "pollinations" ? "POLLINATIONS" : "API";
-statut.textContent = CHAT : ${modeChat} · IMAGE : ${modeImage}; }
-/* ============================================================ AFFICHAGE DES MESSAGES ============================================================ */
+/* ============================================================
+   AFFICHAGE DU STATUT
+   ============================================================ */
+function majStatut() {
+  const statut = document.getElementById("statutMode");
+  const modeChat = CONFIG.chat.mode === "api" ? "API" : "DÉMO";
+  const modeImage = CONFIG.image.mode === "pollinations" ? "POLLINATIONS" : "API";
+  statut.textContent = `CHAT : ${modeChat} · IMAGE : ${modeImage}`;
+}
+
+/* ============================================================
+   AFFICHAGE DES MESSAGES
+   ============================================================ */
 function ajouterMessage(role, type, contenu) {
   etat.messages.push({ role, type, contenu });
 
@@ -176,6 +219,7 @@ async function obtenirReponseChat(texte) {
 
   throw new Error(`Mode de chat inconnu : ${CONFIG.chat.mode}`);
 }
+
 /* ============================================================
    DÉCISION TRADINGVIEW — AFFICHAGE AUTOMATIQUE
    ============================================================ */
@@ -192,11 +236,6 @@ async function verifierDecisionRender() {
 
     const data = await res.json();
     const decision = data.decision;
-     let notifications = [];
-function ajouterNotification(decision) { notifications.unshift({ id: decision.id, heure: decision.heure, symbol: decision.symbol, signal: decision.signal, verdict: decision.verdict }); }
-function afficherNotifications() { if (!notifications.length) { alert("✉️ Aucune notification."); return; }
-const texte = notifications.map((n) => 🕐 ${new Date(n.heure).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}\n + 📊 ${n.symbol} — ${n.signal}\n + Verdict : ${n.verdict} ).join("\n\n");
-alert(✉️ NOTIFICATIONS\n\n${texte}); }
 
     if (!decision) return;
 
@@ -215,18 +254,10 @@ alert(✉️ NOTIFICATIONS\n\n${texte}); }
       `Timeframe : ${decision.timeframe}`,
       `Signal : ${decision.signal}`,
       `Verdict : ${decision.verdict}`,
-      decision.entree !== null
-        ? `Entrée : ${decision.entree}`
-        : null,
-      decision.stop !== null
-        ? `Stop-loss : ${decision.stop}`
-        : null,
-      decision.objectif !== null
-        ? `Objectif : ${decision.objectif}`
-        : null,
-      decision.rr !== null
-        ? `RR : ${decision.rr}`
-        : null,
+      decision.entree !== null ? `Entrée : ${decision.entree}` : null,
+      decision.stop !== null ? `Stop-loss : ${decision.stop}` : null,
+      decision.objectif !== null ? `Objectif : ${decision.objectif}` : null,
+      decision.rr !== null ? `RR : ${decision.rr}` : null,
       "",
       decision.alerteTest
         ? "⚠️ Alerte de TEST — aucune exécution."
@@ -236,9 +267,9 @@ alert(✉️ NOTIFICATIONS\n\n${texte}); }
     ]
       .filter(Boolean)
       .join("\n");
-     
-ajouterNotification(decision);
-ajouterMessage("bot", "texte", message);
+
+    ajouterNotification(decision);
+    ajouterMessage("bot", "texte", message);
 
   } catch (error) {
     console.error(
@@ -248,25 +279,8 @@ ajouterMessage("bot", "texte", message);
   }
 }
 
-setInterval(
-  verifierDecisionRender,
-  2000
-);
-let notifications = [];
-function ajouterNotification(decision) { notifications.unshift({ id: decision.id, heure: decision.heure, symbol: decision.symbol, signal: decision.signal, verdict: decision.verdict }); }
-function afficherNotifications() { listeNotifications.innerHTML = "";
-if (!notifications.length) { listeNotifications.innerHTML = <div class="notification">Aucune notification.</div>; } else { notifications.forEach((n) => { const item = document.createElement("div"); item.className = "notification";
-  item.textContent =
-    `🕐 ${new Date(n.heure).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    })} — ${n.symbol} — ${n.signal} — ${n.verdict}`;
-
-  listeNotifications.appendChild(item);
-});
-}
-panneauNotifications.hidden = false; }
-btnFermerNotifications.addEventListener("click", () => { panneauNotifications.hidden = true; });
+// Une seule boucle de polling.
+setInterval(verifierDecisionRender, 2000);
 
 /* Réponses simulées, juste pour tester l'interface sans rien brancher */
 function reponseDemo(texte) {
@@ -345,11 +359,13 @@ function basculerEmojiPicker() {
 /* ============================================================
    ÉVÉNEMENTS
    ============================================================ */
-if (btnFermerNotifications) {
-  btnFermerNotifications.addEventListener("click", () => {
-    panneauNotifications.hidden = true;
-  });
-}
+btnFermerNotifications.addEventListener("click", () => {
+  panneauNotifications.hidden = true;
+});
+
+btnEmoji.addEventListener("click", basculerEmojiPicker);
+
+btnEnvoyer.addEventListener("click", envoyerMessage);
 
 btnImage.addEventListener("click", genererImage);
 
@@ -369,8 +385,6 @@ function ajusterHauteurSaisie() {
 btnParametres.addEventListener("click", () => {
   afficherNotifications();
 });
-btnImage.addEventListener("click", genererImage);
-
 
 selectModeChat.addEventListener("change", (e) => {
   CONFIG.chat.mode = e.target.value;
