@@ -31,6 +31,9 @@ const btnParametres = document.getElementById("btnParametres");
 const panneauParametres = document.getElementById("panneauParametres");
 const selectModeChat = document.getElementById("selectModeChat");
 const selectModeImage = document.getElementById("selectModeImage");
+const panneauNotifications = document.getElementById("panneauNotifications");
+const listeNotifications = document.getElementById("listeNotifications");
+const btnFermerNotifications = document.getElementById("btnFermerNotifications");
 
 /* ============================================================
    INITIALISATION — applique CONFIG à l'interface
@@ -233,8 +236,9 @@ alert(✉️ NOTIFICATIONS\n\n${texte}); }
     ]
       .filter(Boolean)
       .join("\n");
-
-    ajouterMessage("bot", "texte", message);
+     
+ajouterNotification(decision);
+ajouterMessage("bot", "texte", message);
 
   } catch (error) {
     console.error(
@@ -248,6 +252,21 @@ setInterval(
   verifierDecisionRender,
   2000
 );
+let notifications = [];
+function ajouterNotification(decision) { notifications.unshift({ id: decision.id, heure: decision.heure, symbol: decision.symbol, signal: decision.signal, verdict: decision.verdict }); }
+function afficherNotifications() { listeNotifications.innerHTML = "";
+if (!notifications.length) { listeNotifications.innerHTML = <div class="notification">Aucune notification.</div>; } else { notifications.forEach((n) => { const item = document.createElement("div"); item.className = "notification";
+  item.textContent =
+    `🕐 ${new Date(n.heure).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })} — ${n.symbol} — ${n.signal} — ${n.verdict}`;
+
+  listeNotifications.appendChild(item);
+});
+}
+panneauNotifications.hidden = false; }
+btnFermerNotifications.addEventListener("click", () => { panneauNotifications.hidden = true; });
 
 /* Réponses simulées, juste pour tester l'interface sans rien brancher */
 function reponseDemo(texte) {
@@ -341,12 +360,11 @@ function ajusterHauteurSaisie() {
   champSaisie.style.height = Math.min(champSaisie.scrollHeight, 120) + "px";
 }
 
-btnEmoji.addEventListener("click", basculerEmojiPicker);
-btnImage.addEventListener("click", genererImage);
-
 btnParametres.addEventListener("click", () => {
   afficherNotifications();
 });
+btnImage.addEventListener("click", genererImage);
+
 
 selectModeChat.addEventListener("change", (e) => {
   CONFIG.chat.mode = e.target.value;
