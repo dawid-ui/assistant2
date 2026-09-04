@@ -345,7 +345,13 @@ function basculerEmojiPicker() {
 /* ============================================================
    ÉVÉNEMENTS
    ============================================================ */
-btnEnvoyer.addEventListener("click", envoyerMessage);
+if (btnFermerNotifications) {
+  btnFermerNotifications.addEventListener("click", () => {
+    panneauNotifications.hidden = true;
+  });
+}
+
+btnImage.addEventListener("click", genererImage);
 
 champSaisie.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) {
